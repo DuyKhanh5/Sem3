@@ -26,15 +26,38 @@ namespace Sem3.Controllers
             return View(_context.Products.Take(8).ToList());
         }
         [Route("/Shop")]
-        public IActionResult Shop()
+        public IActionResult Shop(int? categoryId, string searchTerm)
         {
-            return View(_context.Products.ToList());
+            
+            ViewBag.Categories = _context.Categories.ToList();
+
+            // Lọc sản phẩm theo danh mục và tìm kiếm
+            var products = _context.Products.AsQueryable();
+
+            // Lọc theo categoryId nếu có
+            if (categoryId.HasValue)
+            {
+                products = products.Where(p => p.CategoryId == categoryId);
+            }
+
+            // Lọc theo từ khóa tìm kiếm nếu có
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                products = products.Where(p => p.ProductName.Contains(searchTerm));
+            }
+
+            return View(products.ToList());
         }
-        [Route("/Cart")]
-        public IActionResult Cart()
-        {
-            return View();
-        }
+
+
+
+
+
+        //[Route("/Cart")]
+        //public IActionResult Cart()
+        //{
+        //    return View();
+        //}
         [Route("/ProductDetail/{id}")]
         public async Task<IActionResult> ProductDetail(string id)
         {
@@ -44,10 +67,10 @@ namespace Sem3.Controllers
 
             if (product == null)
             {
-                return NotFound(); // Nếu không tìm thấy sản phẩm
+                return NotFound(); 
             }
 
-            return View(product); // Truyền thông tin sản phẩm cho View
+            return View(product); 
         }
 
 

@@ -1,8 +1,15 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+
 @model IEnumerable<Sem3.Models.Product>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
 <!-- Hero Section Begin -->
 <section class="hero">
     <div class="hero__slider owl-carousel">
@@ -118,7 +125,7 @@
                         <ul class="product__hover">
                             <li><a href="#"><img src="/home/img/icon/heart.png" alt=""></a></li>
                             <li><a href="#"><img src="/home/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                <li><a href="productdetail/@item.ProductId"><img src="/home/img/icon/search.png" alt=""></a></li>
+                            <li><a href="productdetail/@item.ProductId"><img src="/home/img/icon/search.png" alt=""></a></li>
                         </ul>
                     </div>
                     <div class="product__item__text">

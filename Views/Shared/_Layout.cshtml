@@ -1,5 +1,4 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zxx">
 
 <head>
@@ -36,8 +35,8 @@
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
-                <a href="#">Sign in</a>
-                <a href="#">FAQs</a>
+                <a href="">Sign in</a>
+                <a href="">FAQs</a>
             </div>
             <div class="offcanvas__top__hover">
                 <span>Usd <i class="arrow_carrot-down"></i></span>
@@ -51,7 +50,7 @@
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="/home/img/icon/search.png" alt=""></a>
             <a href="#"><img src="/home/img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="/home/img/icon/cart.png" alt=""> <span>0</span></a>
+            <a href="/cart"><img src="/home/img/icon/cart.png" alt=""> <span>0</span></a>
             <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -73,7 +72,14 @@
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                <a href="#">Sign in</a>
+                                @{
+                                    int? customerId = Context.Session.GetInt32("CustomerId");
+                                }
+                                <a href="@((customerId != null) ? "/profile" : "/login")">
+                                    @(customerId != null ? "Profile" : "Sign in")
+                                </a>
+
+
                                 <a href="#">FAQs</a>
                             </div>
                             <div class="header__top__hover">

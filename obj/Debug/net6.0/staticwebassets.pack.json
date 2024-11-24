@@ -4101,6 +4101,10 @@
       "PackagePath": "staticwebassets\\home\\sass\\style.scss"
     },
     {
+      "Id": "D:\\code\\C#\\Sem3\\Sem3\\wwwroot\\images\\Screenshot (39).png",
+      "PackagePath": "staticwebassets\\images\\Screenshot (39).png"
+    },
+    {
       "Id": "D:\\code\\C#\\Sem3\\Sem3\\wwwroot\\images\\pro1.webp",
       "PackagePath": "staticwebassets\\images\\pro1.webp"
     },

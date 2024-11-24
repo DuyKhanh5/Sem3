@@ -149,36 +149,6 @@ namespace Sem3.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("ProductId,ProductName,Description,Price,Image,CategoryId")] Product product)
-        //{
-        //    if (id != product.ProductId)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(product);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!ProductExists(product.ProductId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-        //    return View(product);
-        //}
 
         public async Task<IActionResult> Edit(string id, [Bind("ProductId,ProductName,Description,Price,CategoryId")] Product product, IFormFile Image)
         {
@@ -232,43 +202,40 @@ namespace Sem3.Areas.Admin.Controllers
             return View(product);
         }
 
-        // GET: Admin/Products/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null || _context.Products == null)
-            {
-                return NotFound();
-            }
-
-            var product = await _context.Products
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
-        }
-
         // POST: Admin/Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            // Kiểm tra nếu _context.Products null
             if (_context.Products == null)
             {
-                return Problem("Entity set 'prosem3Context.Products'  is null.");
+                return Problem("Entity set 'prosem3Context.Products' is null.");
             }
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
+
+            // Kiểm tra nếu id là null hoặc không hợp lệ
+            if (string.IsNullOrEmpty(id))
             {
-                _context.Products.Remove(product);
+                return NotFound(); // Nếu không có id, trả về NotFound
             }
-            
+
+            // Tìm sản phẩm dựa trên ProductId
+            var product = await _context.Products.FindAsync(id);
+
+            // Kiểm tra nếu sản phẩm tồn tại trong cơ sở dữ liệu
+            if (product == null)
+            {
+                return NotFound(); // Nếu sản phẩm không tồn tại, trả về NotFound
+            }
+
+            // Xóa sản phẩm nếu tồn tại
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+
+            // Chuyển hướng về trang Index sau khi xóa
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool ProductExists(string id)
         {

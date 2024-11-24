@@ -83,11 +83,12 @@
                                                     </button>
                                                 </a> |
                                                 @* <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> | *@
-                                                <a asp-action="Delete" asp-route-id="@item.ProductId">
-                                                    <button type="button" class="btn btn-outline-danger btn-icon-text">
+                                                <form asp-action="Delete" asp-route-id="@item.ProductId" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');" style="display:inline;">
+                                                    <button type="submit" class="btn btn-outline-danger btn-icon-text">
                                                         Delete
                                                     </button>
-                                                </a>
+                                                </form>
+
                                             </td>
                                         </tr>
                                     }

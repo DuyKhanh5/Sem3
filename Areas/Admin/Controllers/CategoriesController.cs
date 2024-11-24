@@ -150,42 +150,42 @@ namespace Sem3.Areas.Admin.Controllers
             return View(category);
         }
 
-        // GET: Admin/Categories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Categories == null)
-            {
-                return NotFound();
-            }
-
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.CategoryId == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
-
-        // POST: Admin/Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (_context.Categories == null)
             {
-                return Problem("Entity set 'prosem3Context.Categories'  is null.");
+                TempData["ErrorMessage"] = "Category data not found.";
+                return RedirectToAction(nameof(Index));
             }
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
+
+            var category = await _context.Categories
+                .Include(c => c.Products) // Include danh sách sản phẩm liên quan
+                .FirstOrDefaultAsync(c => c.CategoryId == id);
+
+            if (category == null)
             {
-                _context.Categories.Remove(category);
+                TempData["ErrorMessage"] = "Category not found.";
+                return RedirectToAction(nameof(Index));
             }
-            
+
+            // Kiểm tra nếu có sản phẩm liên quan
+            if (category.Products != null && category.Products.Any())
+            {
+                TempData["ErrorMessage"] = "Cannot delete this category because it has associated products.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Xóa danh mục
+            _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Category deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool CategoryExists(int id)
         {
